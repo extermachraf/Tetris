@@ -6,6 +6,10 @@ const { Server } = require("socket.io");
 const app = express();
 
 // Middleware and routes
+
+const connectedUsers = [];
+let userNumber = 1;
+
 app.get("/", (req, res) => {
   res.send("Hello from Express + Socket.io!");
 });
@@ -23,6 +27,11 @@ const io = new Server(server, {
 // Socket.io logic
 io.on("connection", (socket) => {
   console.log("A user connected:", socket.id);
+
+  const username = `user${userNumber++}`;
+  connectedUsers.push(username);
+
+  io.emit("zab", connectedUsers);
 
   socket.on("chat message", (msg) => {
     console.log("Received:", msg);
