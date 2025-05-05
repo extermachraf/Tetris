@@ -1,53 +1,28 @@
-import Link from "next/link"
-import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp, KeySquare, Space, Pause, RotateCcw } from "lucide-react"
+import Link from "next/link";
+import {
+  ArrowDown,
+  ArrowLeft,
+  ArrowRight,
+  ArrowUp,
+  KeySquare,
+  Space,
+  Pause,
+  RotateCcw,
+} from "lucide-react";
 
 export default function HowToPlay() {
   return (
     <div className="page-container">
-      {/* Grid Background */}
-      <div className="absolute inset-0 z-0 grid-bg"></div>
-
       {/* Decorative elements */}
       <div className="tetris-decoration" style={{ top: "30%", left: "5%" }}>
         <div className="w-16 h-16 bg-yellow-500/20 rotate-45"></div>
       </div>
-      <div className="tetris-decoration" style={{ bottom: "20%", right: "10%" }}>
+      <div
+        className="tetris-decoration"
+        style={{ bottom: "20%", right: "10%" }}
+      >
         <div className="w-24 h-8 bg-red-500/20 -rotate-12"></div>
       </div>
-
-      {/* Navbar */}
-      <header className="page-header">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="text-3xl font-bold text-cyan-400 tracking-wider glow-text pixel-text">
-            TETRIS
-          </Link>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-4">
-            <Link href="/" className="nav-link">
-              Home
-            </Link>
-            <Link href="/about" className="nav-link">
-              About
-            </Link>
-            <Link href="/how-to-play" className="nav-link text-cyan-400 border-b-2 border-cyan-400">
-              How to Play
-            </Link>
-            <Link href="/high-scores" className="nav-link">
-              High Scores
-            </Link>
-
-            <div className="ml-4 flex items-center gap-2">
-              <Link href="/login" className="nav-button nav-button-signin">
-                SIGN IN
-              </Link>
-              <Link href="/signup" className="nav-button nav-button-signup">
-                SIGN UP
-              </Link>
-            </div>
-          </nav>
-        </div>
-      </header>
 
       {/* Main Content */}
       <main className="page-content">
@@ -60,56 +35,64 @@ export default function HowToPlay() {
             <div className="controls-grid">
               <div className="control-item">
                 <div className="control-key flex items-center">
-                  <ArrowLeft size={16} className="mr-2" /> <span className="key-box">←</span>
+                  <ArrowLeft size={16} className="mr-2" />{" "}
+                  <span className="key-box">←</span>
                 </div>
                 <p className="control-desc">Move piece left</p>
               </div>
 
               <div className="control-item">
                 <div className="control-key flex items-center">
-                  <ArrowRight size={16} className="mr-2" /> <span className="key-box">→</span>
+                  <ArrowRight size={16} className="mr-2" />{" "}
+                  <span className="key-box">→</span>
                 </div>
                 <p className="control-desc">Move piece right</p>
               </div>
 
               <div className="control-item">
                 <div className="control-key flex items-center">
-                  <ArrowUp size={16} className="mr-2" /> <span className="key-box">↑</span>
+                  <ArrowUp size={16} className="mr-2" />{" "}
+                  <span className="key-box">↑</span>
                 </div>
                 <p className="control-desc">Rotate piece clockwise</p>
               </div>
 
               <div className="control-item">
                 <div className="control-key flex items-center">
-                  <ArrowDown size={16} className="mr-2" /> <span className="key-box">↓</span>
+                  <ArrowDown size={16} className="mr-2" />{" "}
+                  <span className="key-box">↓</span>
                 </div>
                 <p className="control-desc">Soft drop (move down faster)</p>
               </div>
 
               <div className="control-item">
                 <div className="control-key flex items-center">
-                  <Space size={16} className="mr-2" /> <span className="key-box">Space</span>
+                  <Space size={16} className="mr-2" />{" "}
+                  <span className="key-box">Space</span>
                 </div>
                 <p className="control-desc">Hard drop (instant placement)</p>
               </div>
 
               <div className="control-item">
                 <div className="control-key flex items-center">
-                  <KeySquare size={16} className="mr-2" /> <span className="key-box">C</span>
+                  <KeySquare size={16} className="mr-2" />{" "}
+                  <span className="key-box">C</span>
                 </div>
                 <p className="control-desc">Hold current piece</p>
               </div>
 
               <div className="control-item">
                 <div className="control-key flex items-center">
-                  <RotateCcw size={16} className="mr-2" /> <span className="key-box">Z</span>
+                  <RotateCcw size={16} className="mr-2" />{" "}
+                  <span className="key-box">Z</span>
                 </div>
                 <p className="control-desc">Rotate piece counter-clockwise</p>
               </div>
 
               <div className="control-item">
                 <div className="control-key flex items-center">
-                  <Pause size={16} className="mr-2" /> <span className="key-box">P</span>
+                  <Pause size={16} className="mr-2" />{" "}
+                  <span className="key-box">P</span>
                 </div>
                 <p className="control-desc">Pause game</p>
               </div>
@@ -121,7 +104,11 @@ export default function HowToPlay() {
             <h2 className="content-section-title">TETROMINOS</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-4">
               {[
-                { name: "I-Piece", color: "bg-cyan-500", shape: [[1, 1, 1, 1]] },
+                {
+                  name: "I-Piece",
+                  color: "bg-cyan-500",
+                  shape: [[1, 1, 1, 1]],
+                },
                 {
                   name: "O-Piece",
                   color: "bg-yellow-500",
@@ -171,7 +158,10 @@ export default function HowToPlay() {
                   ],
                 },
               ].map((piece, index) => (
-                <div key={index} className="bg-black/30 p-4 border border-gray-800 text-center">
+                <div
+                  key={index}
+                  className="bg-black/30 p-4 border border-gray-800 text-center"
+                >
                   <div className="mb-3 flex justify-center">
                     <div
                       className="grid gap-1"
@@ -181,11 +171,18 @@ export default function HowToPlay() {
                       }}
                     >
                       {piece.shape.flat().map((cell, i) => (
-                        <div key={i} className={`w-5 h-5 ${cell ? piece.color : "bg-transparent"}`}></div>
+                        <div
+                          key={i}
+                          className={`w-5 h-5 ${
+                            cell ? piece.color : "bg-transparent"
+                          }`}
+                        ></div>
                       ))}
                     </div>
                   </div>
-                  <div className="text-xs font-pixel text-gray-300">{piece.name}</div>
+                  <div className="text-xs font-pixel text-gray-300">
+                    {piece.name}
+                  </div>
                 </div>
               ))}
             </div>
@@ -198,19 +195,27 @@ export default function HowToPlay() {
               <ul className="space-y-3 text-gray-300">
                 <li className="flex items-start">
                   <span className="text-cyan-400 mr-2">•</span>
-                  <span>Tetriminos (game pieces) fall from the top of the field.</span>
+                  <span>
+                    Tetriminos (game pieces) fall from the top of the field.
+                  </span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-cyan-400 mr-2">•</span>
-                  <span>Your goal is to create horizontal lines with the blocks.</span>
+                  <span>
+                    Your goal is to create horizontal lines with the blocks.
+                  </span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-cyan-400 mr-2">•</span>
-                  <span>When a line is created, it disappears and you earn points.</span>
+                  <span>
+                    When a line is created, it disappears and you earn points.
+                  </span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-cyan-400 mr-2">•</span>
-                  <span>The game ends when the blocks reach the top of the field.</span>
+                  <span>
+                    The game ends when the blocks reach the top of the field.
+                  </span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-cyan-400 mr-2">•</span>
@@ -227,8 +232,12 @@ export default function HowToPlay() {
               <table className="w-full">
                 <thead>
                   <tr className="bg-black/70">
-                    <th className="text-left p-3 text-cyan-400 font-pixel text-xs">Action</th>
-                    <th className="text-left p-3 text-cyan-400 font-pixel text-xs">Points</th>
+                    <th className="text-left p-3 text-cyan-400 font-pixel text-xs">
+                      Action
+                    </th>
+                    <th className="text-left p-3 text-cyan-400 font-pixel text-xs">
+                      Points
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-800">
@@ -245,7 +254,9 @@ export default function HowToPlay() {
                     <td className="p-3 text-cyan-400 font-mono">500 × Level</td>
                   </tr>
                   <tr>
-                    <td className="p-3 text-gray-300">Tetris (Four Line Clear)</td>
+                    <td className="p-3 text-gray-300">
+                      Tetris (Four Line Clear)
+                    </td>
                     <td className="p-3 text-cyan-400 font-mono">800 × Level</td>
                   </tr>
                   <tr className="bg-black/30">
@@ -266,32 +277,42 @@ export default function HowToPlay() {
             <h2 className="content-section-title">ADVANCED TIPS</h2>
             <div className="grid md:grid-cols-2 gap-4">
               <div className="bg-black/30 p-4 border border-gray-800">
-                <h3 className="text-cyan-400 font-pixel text-sm mb-2">T-SPIN</h3>
+                <h3 className="text-cyan-400 font-pixel text-sm mb-2">
+                  T-SPIN
+                </h3>
                 <p className="text-gray-300 text-sm">
-                  Rotate a T piece into a tight spot for bonus points. T-Spins can score more than a Tetris when
-                  executed properly!
+                  Rotate a T piece into a tight spot for bonus points. T-Spins
+                  can score more than a Tetris when executed properly!
                 </p>
               </div>
 
               <div className="bg-black/30 p-4 border border-gray-800">
-                <h3 className="text-cyan-400 font-pixel text-sm mb-2">HOLD QUEUE</h3>
+                <h3 className="text-cyan-400 font-pixel text-sm mb-2">
+                  HOLD QUEUE
+                </h3>
                 <p className="text-gray-300 text-sm">
-                  Use the hold queue strategically to save pieces for later or to get out of difficult situations.
+                  Use the hold queue strategically to save pieces for later or
+                  to get out of difficult situations.
                 </p>
               </div>
 
               <div className="bg-black/30 p-4 border border-gray-800">
-                <h3 className="text-cyan-400 font-pixel text-sm mb-2">WALL KICKS</h3>
+                <h3 className="text-cyan-400 font-pixel text-sm mb-2">
+                  WALL KICKS
+                </h3>
                 <p className="text-gray-300 text-sm">
-                  When rotating near walls, pieces will try to "kick" away from the wall to fit. Use this to your
-                  advantage!
+                  When rotating near walls, pieces will try to "kick" away from
+                  the wall to fit. Use this to your advantage!
                 </p>
               </div>
 
               <div className="bg-black/30 p-4 border border-gray-800">
-                <h3 className="text-cyan-400 font-pixel text-sm mb-2">PERFECT CLEAR</h3>
+                <h3 className="text-cyan-400 font-pixel text-sm mb-2">
+                  PERFECT CLEAR
+                </h3>
                 <p className="text-gray-300 text-sm">
-                  Clear the entire board for a massive bonus. This is difficult but extremely rewarding!
+                  Clear the entire board for a massive bonus. This is difficult
+                  but extremely rewarding!
                 </p>
               </div>
             </div>
@@ -299,8 +320,13 @@ export default function HowToPlay() {
 
           {/* CTA Section */}
           <div className="mt-12 text-center">
-            <p className="text-gray-300 mb-6">Ready to put your skills to the test?</p>
-            <Link href="/play" className="tetris-button tetris-button-primary inline-block">
+            <p className="text-gray-300 mb-6">
+              Ready to put your skills to the test?
+            </p>
+            <Link
+              href="/play"
+              className="tetris-button tetris-button-primary inline-block"
+            >
               PLAY NOW
             </Link>
           </div>
@@ -329,5 +355,5 @@ export default function HowToPlay() {
         </div>
       </footer>
     </div>
-  )
+  );
 }

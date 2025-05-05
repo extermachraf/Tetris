@@ -1,53 +1,44 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import Link from "next/link"
-import { ArrowLeft, Eye, EyeOff } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { useState } from "react";
+import Link from "next/link";
+import { ArrowLeft, Eye, EyeOff } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export default function SignIn() {
-  const [showPassword, setShowPassword] = useState(false)
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     username: "",
     password: "",
-  })
+  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
-  }
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     // Here you would handle authentication
-    console.log("Sign in with:", formData)
-  }
+    console.log("Sign in with:", formData);
+  };
 
   return (
-    <div className="min-h-screen bg-black text-white relative overflow-hidden flex flex-col">
-      {/* Grid Background */}
-      <div className="absolute inset-0 z-0 grid-bg"></div>
-
+    <div className="min-h-screen relative overflow-hidden flex flex-col">
       {/* Decorative elements */}
       <div className="tetris-decoration" style={{ top: "20%", left: "10%" }}>
         <div className="w-16 h-16 bg-cyan-500/20 rotate-45"></div>
       </div>
-      <div className="tetris-decoration" style={{ bottom: "15%", right: "10%" }}>
+      <div
+        className="tetris-decoration"
+        style={{ bottom: "15%", right: "10%" }}
+      >
         <div className="w-24 h-8 bg-purple-500/20 -rotate-12"></div>
       </div>
-
-      {/* Header */}
-      <header className="relative z-10 border-b border-gray-800">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="text-3xl font-bold text-cyan-400 tracking-wider glow-text pixel-text">
-            TETRIS
-          </Link>
-        </div>
-      </header>
 
       {/* Main Content */}
       <main className="relative z-10 flex-1 flex items-center justify-center py-12">
@@ -57,12 +48,17 @@ export default function SignIn() {
               <Link href="/" className="text-cyan-400 hover:text-cyan-300 mr-4">
                 <ArrowLeft size={20} />
               </Link>
-              <h1 className="text-2xl font-bold text-cyan-400 pixel-text">SIGN IN</h1>
+              <h1 className="text-2xl font-bold text-cyan-400 pixel-text">
+                SIGN IN
+              </h1>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="username" className="text-white pixel-text text-xs">
+                <Label
+                  htmlFor="username"
+                  className="text-white pixel-text text-xs"
+                >
                   USERNAME
                 </Label>
                 <Input
@@ -77,7 +73,10 @@ export default function SignIn() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-white pixel-text text-xs">
+                <Label
+                  htmlFor="password"
+                  className="text-white pixel-text text-xs"
+                >
                   PASSWORD
                 </Label>
                 <div className="relative">
@@ -108,13 +107,19 @@ export default function SignIn() {
                     type="checkbox"
                     className="h-4 w-4 rounded border-gray-700 bg-gray-900 text-cyan-500 focus:ring-cyan-500"
                   />
-                  <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-300">
+                  <label
+                    htmlFor="remember-me"
+                    className="ml-2 block text-sm text-gray-300"
+                  >
                     Remember me
                   </label>
                 </div>
 
                 <div className="text-sm">
-                  <Link href="/forgot-password" className="text-cyan-400 hover:text-cyan-300 pixel-text text-xs">
+                  <Link
+                    href="/forgot-password"
+                    className="text-cyan-400 hover:text-cyan-300 pixel-text text-xs"
+                  >
                     FORGOT PASSWORD?
                   </Link>
                 </div>
@@ -172,5 +177,5 @@ export default function SignIn() {
         </div>
       </footer>
     </div>
-  )
+  );
 }

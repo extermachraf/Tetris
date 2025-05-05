@@ -1,46 +1,44 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import Link from "next/link"
-import { ArrowLeft, Eye, EyeOff, Check, X } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { useState } from "react";
+import Link from "next/link";
+import { ArrowLeft, Eye, EyeOff, Check, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export default function SignUp() {
-  const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
     username: "",
     email: "",
     password: "",
     confirmPassword: "",
-  })
+  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
-  }
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     // Here you would handle registration
-    console.log("Sign up with:", formData)
-  }
+    console.log("Sign up with:", formData);
+  };
 
   // Password validation
-  const passwordLength = formData.password.length >= 8
-  const passwordHasNumber = /\d/.test(formData.password)
-  const passwordHasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(formData.password)
-  const passwordsMatch = formData.password === formData.confirmPassword && formData.password !== ""
+  const passwordLength = formData.password.length >= 8;
+  const passwordHasNumber = /\d/.test(formData.password);
+  const passwordHasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(formData.password);
+  const passwordsMatch =
+    formData.password === formData.confirmPassword && formData.password !== "";
 
   return (
-    <div className="min-h-screen bg-black text-white relative overflow-hidden flex flex-col">
-      {/* Grid Background */}
-      <div className="absolute inset-0 z-0 grid-bg"></div>
-
+    <div className="min-h-screen relative overflow-hidden flex flex-col">
       {/* Decorative elements */}
       <div className="tetris-decoration" style={{ top: "15%", right: "10%" }}>
         <div className="w-20 h-8 bg-green-500/20 rotate-12"></div>
@@ -48,15 +46,6 @@ export default function SignUp() {
       <div className="tetris-decoration" style={{ bottom: "20%", left: "5%" }}>
         <div className="w-16 h-16 bg-orange-500/20 -rotate-45"></div>
       </div>
-
-      {/* Header */}
-      <header className="relative z-10 border-b border-gray-800">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="text-3xl font-bold text-cyan-400 tracking-wider glow-text pixel-text">
-            TETRIS
-          </Link>
-        </div>
-      </header>
 
       {/* Main Content */}
       <main className="relative z-10 flex-1 flex items-center justify-center py-12">
@@ -66,12 +55,17 @@ export default function SignUp() {
               <Link href="/" className="text-cyan-400 hover:text-cyan-300 mr-4">
                 <ArrowLeft size={20} />
               </Link>
-              <h1 className="text-2xl font-bold text-cyan-400 pixel-text">CREATE ACCOUNT</h1>
+              <h1 className="text-2xl font-bold text-cyan-400 pixel-text">
+                CREATE ACCOUNT
+              </h1>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="username" className="text-white pixel-text text-xs">
+                <Label
+                  htmlFor="username"
+                  className="text-white pixel-text text-xs"
+                >
                   USERNAME
                 </Label>
                 <Input
@@ -86,7 +80,10 @@ export default function SignUp() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-white pixel-text text-xs">
+                <Label
+                  htmlFor="email"
+                  className="text-white pixel-text text-xs"
+                >
                   EMAIL
                 </Label>
                 <Input
@@ -101,7 +98,10 @@ export default function SignUp() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-white pixel-text text-xs">
+                <Label
+                  htmlFor="password"
+                  className="text-white pixel-text text-xs"
+                >
                   PASSWORD
                 </Label>
                 <div className="relative">
@@ -131,7 +131,13 @@ export default function SignUp() {
                     ) : (
                       <X size={12} className="text-red-500 mr-1" />
                     )}
-                    <span className={passwordLength ? "text-green-500" : "text-gray-400"}>At least 8 characters</span>
+                    <span
+                      className={
+                        passwordLength ? "text-green-500" : "text-gray-400"
+                      }
+                    >
+                      At least 8 characters
+                    </span>
                   </div>
                   <div className="flex items-center text-xs">
                     {passwordHasNumber ? (
@@ -139,7 +145,13 @@ export default function SignUp() {
                     ) : (
                       <X size={12} className="text-red-500 mr-1" />
                     )}
-                    <span className={passwordHasNumber ? "text-green-500" : "text-gray-400"}>At least 1 number</span>
+                    <span
+                      className={
+                        passwordHasNumber ? "text-green-500" : "text-gray-400"
+                      }
+                    >
+                      At least 1 number
+                    </span>
                   </div>
                   <div className="flex items-center text-xs">
                     {passwordHasSpecial ? (
@@ -147,7 +159,11 @@ export default function SignUp() {
                     ) : (
                       <X size={12} className="text-red-500 mr-1" />
                     )}
-                    <span className={passwordHasSpecial ? "text-green-500" : "text-gray-400"}>
+                    <span
+                      className={
+                        passwordHasSpecial ? "text-green-500" : "text-gray-400"
+                      }
+                    >
                       At least 1 special character
                     </span>
                   </div>
@@ -155,7 +171,10 @@ export default function SignUp() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="confirmPassword" className="text-white pixel-text text-xs">
+                <Label
+                  htmlFor="confirmPassword"
+                  className="text-white pixel-text text-xs"
+                >
                   CONFIRM PASSWORD
                 </Label>
                 <div className="relative">
@@ -167,7 +186,9 @@ export default function SignUp() {
                     onChange={handleChange}
                     required
                     className={`bg-gray-900 border-gray-700 focus-visible:ring-cyan-500 pr-10 ${
-                      formData.confirmPassword && !passwordsMatch ? "border-red-500" : ""
+                      formData.confirmPassword && !passwordsMatch
+                        ? "border-red-500"
+                        : ""
                     }`}
                   />
                   <button
@@ -175,11 +196,17 @@ export default function SignUp() {
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
                   >
-                    {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    {showConfirmPassword ? (
+                      <EyeOff size={18} />
+                    ) : (
+                      <Eye size={18} />
+                    )}
                   </button>
                 </div>
                 {formData.confirmPassword && !passwordsMatch && (
-                  <p className="text-red-500 text-xs mt-1">Passwords do not match</p>
+                  <p className="text-red-500 text-xs mt-1">
+                    Passwords do not match
+                  </p>
                 )}
               </div>
 
@@ -191,13 +218,22 @@ export default function SignUp() {
                   required
                   className="h-4 w-4 rounded border-gray-700 bg-gray-900 text-cyan-500 focus:ring-cyan-500"
                 />
-                <label htmlFor="terms" className="ml-2 block text-sm text-gray-300">
+                <label
+                  htmlFor="terms"
+                  className="ml-2 block text-sm text-gray-300"
+                >
                   I agree to the{" "}
-                  <Link href="/terms" className="text-cyan-400 hover:text-cyan-300">
+                  <Link
+                    href="/terms"
+                    className="text-cyan-400 hover:text-cyan-300"
+                  >
                     Terms of Service
                   </Link>{" "}
                   and{" "}
-                  <Link href="/privacy" className="text-cyan-400 hover:text-cyan-300">
+                  <Link
+                    href="/privacy"
+                    className="text-cyan-400 hover:text-cyan-300"
+                  >
                     Privacy Policy
                   </Link>
                 </label>
@@ -206,7 +242,12 @@ export default function SignUp() {
               <Button
                 type="submit"
                 className="w-full bg-cyan-500 hover:bg-cyan-400 text-black font-bold pixel-text py-5"
-                disabled={!passwordLength || !passwordHasNumber || !passwordHasSpecial || !passwordsMatch}
+                disabled={
+                  !passwordLength ||
+                  !passwordHasNumber ||
+                  !passwordHasSpecial ||
+                  !passwordsMatch
+                }
               >
                 CREATE ACCOUNT
               </Button>
@@ -256,5 +297,5 @@ export default function SignUp() {
         </div>
       </footer>
     </div>
-  )
+  );
 }

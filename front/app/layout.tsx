@@ -1,6 +1,7 @@
 import type React from "react";
 import type { Metadata } from "next";
 import { Press_Start_2P, Roboto } from "next/font/google";
+import NavBar from "@/components/NavBar";
 import "./globals.css";
 
 const pressStart2P = Press_Start_2P({
@@ -30,7 +31,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${pressStart2P.variable} ${roboto.variable}`}>
-        {children}
+        <div className="min-h-screen bg-tetris-bg text-foreground relative overflow-hidden">
+          <NavBar />
+          {children}
+        </div>
       </body>
     </html>
   );

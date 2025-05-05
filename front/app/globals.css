@@ -10,7 +10,12 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
   font-family: var(--font-roboto), sans-serif;
 }
 
@@ -24,45 +29,45 @@ body {
 
 /* Pixel Text */
 .pixel-text {
-  font-family: var(--font-press-start-2p), monospace;
+  font-family: "Press Start 2P", cursive;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
 /* Glow Effects - Reduced intensity */
 .glow-text {
-  text-shadow: 0 0 5px rgba(45, 212, 191, 0.7), 0 0 10px rgba(45, 212, 191, 0.4);
+  text-shadow: 0 0 5px rgba(0, 240, 240, 0.7), 0 0 10px rgba(0, 240, 240, 0.5);
 }
 
 .glow-text-white {
-  text-shadow: 0 0 5px rgba(255, 255, 255, 0.7), 0 0 10px rgba(255, 255, 255, 0.4);
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.7),
+    0 0 10px rgba(255, 255, 255, 0.5);
 }
 
 /* Navigation */
 .nav-link {
-  @apply text-white hover:text-cyan-400 transition-colors py-2 px-3 border-b-2 border-transparent hover:border-cyan-400;
-  font-family: var(--font-press-start-2p), monospace;
-  font-size: 0.6rem;
+  @apply font-medium  hover:text-white transition-colors duration-200 px-2 py-1;
+  font-family: "Press Start 2P", cursive;
 }
 
 .nav-button {
-  @apply px-3 py-1.5 text-xs transition-colors;
-  font-family: var(--font-press-start-2p), monospace;
-  font-size: 0.6rem;
+  @apply px-4 py-2 rounded font-bold transition-all duration-200 text-xs;
+  font-family: "Press Start 2P", cursive;
 }
 
 .nav-button-signin {
-  @apply bg-transparent border border-cyan-500 text-cyan-400 hover:bg-cyan-500/10;
+  @apply bg-transparent text-cyan-400 hover:text-cyan-300 border border-cyan-400 hover:border-cyan-300;
 }
 
 .nav-button-signup {
-  @apply bg-cyan-500 hover:bg-cyan-400 text-black;
+  @apply bg-cyan-400 hover:bg-cyan-500 text-black;
 }
 
 /* Tetris Game Preview */
 .tetris-preview {
   @apply border-2 border-gray-800 bg-black/80 p-4 max-w-md mx-auto overflow-hidden;
-  box-shadow: 0 0 15px rgba(45, 212, 191, 0.15), inset 0 0 10px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 15px rgba(45, 212, 191, 0.15),
+    inset 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .tetris-game {
@@ -136,52 +141,59 @@ body {
 /* Tetris Pieces - Reduced glow */
 .tetris-piece-i {
   background-color: #06b6d4; /* cyan-500 */
-  box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.5), 0 0 3px rgba(6, 182, 212, 0.4);
+  box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.5),
+    0 0 3px rgba(6, 182, 212, 0.4);
 }
 
 .tetris-piece-o {
   background-color: #facc15; /* yellow-400 */
-  box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.5), 0 0 3px rgba(250, 204, 21, 0.4);
+  box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.5),
+    0 0 3px rgba(250, 204, 21, 0.4);
 }
 
 .tetris-piece-t {
   background-color: #c084fc; /* purple-400 */
-  box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.5), 0 0 3px rgba(192, 132, 252, 0.4);
+  box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.5),
+    0 0 3px rgba(192, 132, 252, 0.4);
 }
 
 .tetris-piece-s {
   background-color: #4ade80; /* green-400 */
-  box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.5), 0 0 3px rgba(74, 222, 128, 0.4);
+  box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.5),
+    0 0 3px rgba(74, 222, 128, 0.4);
 }
 
 .tetris-piece-z {
   background-color: #ef4444; /* red-500 */
-  box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.5), 0 0 3px rgba(239, 68, 68, 0.4);
+  box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.5),
+    0 0 3px rgba(239, 68, 68, 0.4);
 }
 
 .tetris-piece-j {
   background-color: #3b82f6; /* blue-500 */
-  box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.5), 0 0 3px rgba(59, 130, 246, 0.4);
+  box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.5),
+    0 0 3px rgba(59, 130, 246, 0.4);
 }
 
 .tetris-piece-l {
   background-color: #f97316; /* orange-500 */
-  box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.5), 0 0 3px rgba(249, 115, 22, 0.4);
+  box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.5),
+    0 0 3px rgba(249, 115, 22, 0.4);
 }
 
 /* Button Styles */
 .tetris-button {
-  @apply px-8 py-3 font-bold text-lg transition-colors;
-  font-family: var(--font-press-start-2p), monospace;
-  font-size: 0.8rem;
+  @apply px-6 py-3 rounded-md font-bold transition-all duration-200;
+  font-family: "Press Start 2P", cursive;
+  font-size: 0.875rem;
 }
 
 .tetris-button-primary {
-  @apply bg-cyan-400 hover:bg-cyan-300 text-black;
+  @apply bg-cyan-400 hover:bg-cyan-500 text-black;
 }
 
 .tetris-button-secondary {
-  @apply bg-transparent border-2 border-purple-500 text-purple-400 hover:bg-purple-500/10;
+  @apply bg-transparent text-cyan-400 hover:text-cyan-300 border border-cyan-400 hover:border-cyan-300;
 }
 
 /* Mobile Menu */
@@ -191,30 +203,30 @@ body {
 
 /* Game Mode Cards */
 .game-mode-card {
-  @apply border border-gray-800 p-6 hover:border-gray-700 transition bg-black/50;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  @apply bg-gray-900/50 backdrop-blur-sm p-6 rounded-lg border border-gray-800 hover:border-gray-700 transition-all;
 }
 
 .game-mode-title {
   @apply text-xl font-bold mb-3;
-  font-family: var(--font-press-start-2p), monospace;
-  font-size: 0.9rem;
+  font-family: "Press Start 2P", cursive;
 }
 
 /* Section Titles */
 .section-title {
-  @apply text-3xl md:text-4xl font-bold text-center mb-12 text-cyan-400 glow-text;
-  font-family: var(--font-press-start-2p), monospace;
-  font-size: 1.5rem;
-  letter-spacing: 0.05em;
+  font-size: 1.75rem;
+  text-align: center;
+  margin-bottom: 2.5rem;
+  color: #00f0f0;
+  font-family: "Press Start 2P", cursive;
 }
 
 /* Hero Title */
 .hero-title {
-  @apply text-4xl md:text-5xl font-bold leading-none tracking-wider;
-  font-family: var(--font-press-start-2p), monospace;
-  font-size: 2rem;
-  line-height: 1.3;
+  font-size: 3rem;
+  line-height: 1.2;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  font-family: "Press Start 2P", cursive;
 }
 
 /* Page Styles */
@@ -254,10 +266,7 @@ body {
 }
 
 .tetris-decoration {
-  position: absolute;
-  z-index: 0;
-  opacity: 0.1;
-  pointer-events: none;
+  @apply absolute z-0 opacity-30;
 }
 
 /* Responsive adjustments */
@@ -272,11 +281,6 @@ body {
 
   .game-mode-title {
     font-size: 0.8rem;
-  }
-
-  .nav-link {
-    font-size: 0.5rem;
-    @apply px-2;
   }
 }
 
