@@ -1,9 +1,16 @@
 const express = require("express");
+const cors = require("cors");
 const http = require("http");
 const authRoutes = require("./src/routes/authRoutes");
 
 const app = express();
 
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 // Middleware and routes
 app.use(express.json()); // For parsing application/json
 

@@ -8,8 +8,13 @@ import { ArrowLeft, Eye, EyeOff, Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import api from "@/lib/api";
+import { SignUpRequest, user } from "@/types/auth";
+import { IoAlert } from "react-icons/io5";
+import { useRouter } from "next/navigation";
 
 export default function SignUp() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -19,15 +24,41 @@ export default function SignUp() {
     confirmPassword: "",
   });
 
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // Here you would handle registration
-    console.log("Sign up with:", formData);
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+    setError("");
+    setLoading(true);
+
+    try {
+      const signUpData: SignUpRequest = {
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+      };
+      const response = await api.post("auth/signup", signUpData);
+      console.log(response.data);
+      router.push("/play");
+    } catch (err: any) {
+      console.log(err.response);
+      setError(
+        err.response?.data?.message || "An error occurred during signup."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Password validation
@@ -60,6 +91,12 @@ export default function SignUp() {
               </h1>
             </div>
 
+            {error.length !== 0 && (
+              <div className="text-red-500 flex items-center justify-center p-4">
+                <IoAlert />
+                <p>{error}</p>
+              </div>
+            )}
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
                 <Label
