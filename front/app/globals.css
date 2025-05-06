@@ -1,0 +1,357 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 0, 0, 0;
+  --background-end-rgb: 0, 0, 0;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+  font-family: var(--font-roboto), sans-serif;
+}
+
+/* Grid Background */
+.grid-bg {
+  background-image: linear-gradient(rgba(20, 20, 20, 1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(20, 20, 20, 1) 1px, transparent 1px);
+  background-size: 30px 30px;
+  background-position: center center;
+}
+
+/* Pixel Text */
+.pixel-text {
+  font-family: "Press Start 2P", cursive;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Glow Effects - Reduced intensity */
+.glow-text {
+  text-shadow: 0 0 5px rgba(0, 240, 240, 0.7), 0 0 10px rgba(0, 240, 240, 0.5);
+}
+
+.glow-text-white {
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.7),
+    0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+/* Navigation */
+.nav-link {
+  @apply font-medium  hover:text-white transition-colors duration-200 px-2 py-1;
+  font-family: "Press Start 2P", cursive;
+}
+
+.nav-button {
+  @apply px-4 py-2 rounded font-bold transition-all duration-200 text-xs;
+  font-family: "Press Start 2P", cursive;
+}
+
+.nav-button-signin {
+  @apply bg-transparent text-cyan-400 hover:text-cyan-300 border border-cyan-400 hover:border-cyan-300;
+}
+
+.nav-button-signup {
+  @apply bg-cyan-400 hover:bg-cyan-500 text-black;
+}
+
+/* Tetris Game Preview */
+.tetris-preview {
+  @apply border-2 border-gray-800 bg-black/80 p-4 max-w-md mx-auto overflow-hidden;
+  box-shadow: 0 0 15px rgba(45, 212, 191, 0.15),
+    inset 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.tetris-game {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1rem;
+}
+
+.tetris-board {
+  position: relative;
+  aspect-ratio: 10 / 20;
+  background-color: rgba(0, 0, 0, 0.8);
+  border: 2px solid #1f2937;
+  overflow: hidden;
+}
+
+.tetris-grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(20, 1fr);
+  gap: 1px;
+}
+
+.tetris-cell {
+  background-color: rgba(31, 41, 55, 0.3);
+  border: 1px solid rgba(31, 41, 55, 0.5);
+}
+
+.tetris-cell.filled {
+  border: none;
+}
+
+.tetris-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.tetris-panel {
+  background-color: rgba(0, 0, 0, 0.7);
+  border: 2px solid #1f2937;
+  padding: 0.5rem;
+}
+
+.tetris-panel-title {
+  font-family: var(--font-press-start-2p), monospace;
+  font-size: 0.6rem;
+  color: #2dd4bf;
+  margin-bottom: 0.5rem;
+}
+
+.tetris-panel-content {
+  font-family: var(--font-press-start-2p), monospace;
+  font-size: 0.8rem;
+  color: #2dd4bf;
+}
+
+.tetris-next-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: 1px;
+  aspect-ratio: 1 / 1;
+}
+
+/* Tetris Pieces - Reduced glow */
+.tetris-piece-i {
+  background-color: #06b6d4; /* cyan-500 */
+  box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.5),
+    0 0 3px rgba(6, 182, 212, 0.4);
+}
+
+.tetris-piece-o {
+  background-color: #facc15; /* yellow-400 */
+  box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.5),
+    0 0 3px rgba(250, 204, 21, 0.4);
+}
+
+.tetris-piece-t {
+  background-color: #c084fc; /* purple-400 */
+  box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.5),
+    0 0 3px rgba(192, 132, 252, 0.4);
+}
+
+.tetris-piece-s {
+  background-color: #4ade80; /* green-400 */
+  box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.5),
+    0 0 3px rgba(74, 222, 128, 0.4);
+}
+
+.tetris-piece-z {
+  background-color: #ef4444; /* red-500 */
+  box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.5),
+    0 0 3px rgba(239, 68, 68, 0.4);
+}
+
+.tetris-piece-j {
+  background-color: #3b82f6; /* blue-500 */
+  box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.5),
+    0 0 3px rgba(59, 130, 246, 0.4);
+}
+
+.tetris-piece-l {
+  background-color: #f97316; /* orange-500 */
+  box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.5),
+    0 0 3px rgba(249, 115, 22, 0.4);
+}
+
+/* Button Styles */
+.tetris-button {
+  @apply px-6 py-3 rounded-md font-bold transition-all duration-200;
+  font-family: "Press Start 2P", cursive;
+  font-size: 0.875rem;
+}
+
+.tetris-button-primary {
+  @apply bg-cyan-400 hover:bg-cyan-500 text-black;
+}
+
+.tetris-button-secondary {
+  @apply bg-transparent text-cyan-400 hover:text-cyan-300 border border-cyan-400 hover:border-cyan-300;
+}
+
+/* Mobile Menu */
+#mobile-menu.open {
+  transform: translateX(0);
+}
+
+/* Game Mode Cards */
+.game-mode-card {
+  @apply bg-gray-900/50 backdrop-blur-sm p-6 rounded-lg border border-gray-800 hover:border-gray-700 transition-all;
+}
+
+.game-mode-title {
+  @apply text-xl font-bold mb-3;
+  font-family: "Press Start 2P", cursive;
+}
+
+/* Section Titles */
+.section-title {
+  font-size: 1.75rem;
+  text-align: center;
+  margin-bottom: 2.5rem;
+  color: #00f0f0;
+  font-family: "Press Start 2P", cursive;
+}
+
+/* Hero Title */
+.hero-title {
+  font-size: 3rem;
+  line-height: 1.2;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  font-family: "Press Start 2P", cursive;
+}
+
+/* Page Styles */
+.page-container {
+  @apply min-h-screen bg-black text-white relative overflow-hidden;
+}
+
+.page-header {
+  @apply relative z-10 border-b border-gray-800;
+}
+
+.page-content {
+  @apply relative z-10 container mx-auto px-4 py-12;
+}
+
+.page-title {
+  @apply text-4xl md:text-5xl font-bold mb-8 text-cyan-400 glow-text pixel-text text-center;
+}
+
+.content-card {
+  @apply max-w-4xl mx-auto bg-black/50 border border-gray-800 p-6 md:p-8;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+.content-section {
+  @apply mb-8;
+}
+
+.content-section-title {
+  @apply text-2xl font-bold mb-4 text-cyan-400 pixel-text;
+  font-size: 1rem;
+}
+
+/* Creative elements */
+.pixel-decoration {
+  @apply absolute opacity-20 z-0;
+}
+
+.tetris-decoration {
+  @apply absolute z-0 opacity-30;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 1.5rem;
+  }
+
+  .section-title {
+    font-size: 1.2rem;
+  }
+
+  .game-mode-title {
+    font-size: 0.8rem;
+  }
+}
+
+/* About page specific */
+.about-feature {
+  @apply flex items-center gap-4 mb-4 p-3 border border-gray-800 bg-black/30 rounded;
+}
+
+.about-feature-icon {
+  @apply text-cyan-400 flex-shrink-0;
+}
+
+.about-feature-text {
+  @apply text-gray-300;
+}
+
+/* How to Play specific */
+.controls-grid {
+  @apply grid grid-cols-2 gap-4 mb-8;
+}
+
+.control-item {
+  @apply bg-black/30 p-3 border border-gray-800 rounded;
+}
+
+.control-key {
+  @apply text-cyan-400 font-pixel mb-2 text-sm;
+}
+
+.control-desc {
+  @apply text-gray-400;
+}
+
+.key-box {
+  @apply inline-block px-2 py-1 bg-gray-800 text-white font-pixel text-xs mr-1 border border-gray-700;
+}
+
+/* High Scores specific */
+.score-table {
+  @apply w-full border-collapse;
+}
+
+.score-header {
+  @apply bg-black/70 text-cyan-400 font-pixel text-xs p-3 text-left border-b border-gray-800;
+}
+
+.score-row {
+  @apply hover:bg-gray-900/30 transition-colors;
+}
+
+.score-row:nth-child(even) {
+  @apply bg-black/30;
+}
+
+.score-cell {
+  @apply p-3 border-b border-gray-800 font-mono;
+}
+
+.score-value {
+  @apply text-cyan-400;
+}
+
+.score-rank {
+  @apply font-pixel text-sm;
+}
+
+.score-highlight {
+  @apply relative;
+}
+
+.score-highlight::before {
+  content: "";
+  @apply absolute inset-0 border-2 border-cyan-500/50 -m-0.5 pointer-events-none;
+}
