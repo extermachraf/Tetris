@@ -23,30 +23,41 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import Footer from "@/components/Footer";
+import useUserStore from "@/store/useUserStore";
+import { useRouter } from "next/navigation";
 
 export default function Play() {
+  const router = useRouter();
+  const { currentUser } = useUserStore();
   const [createRoomDialog, setCreateRoomDialog] = useState(false);
   const [joinRoomDialog, setJoinRoomDialog] = useState(false);
   const [roomCode, setRoomCode] = useState("");
   const [roomName, setRoomName] = useState("");
-  const [playerName, setPlayerName] = useState("");
 
   const handleCreateRoom = (e: React.FormEvent) => {
     e.preventDefault();
     // Here you would handle room creation
-    console.log("Creating room:", { roomName, playerName });
+    console.log("Creating room:", { roomName });
     // Redirect to the game room
-    window.location.href = `/play/online/room/${Math.random()
-      .toString(36)
-      .substring(2, 8)}`;
+    // window.location.href = `/play/online/${roomName}/${
+    //   currentUser?.username
+    // }/${Math.random().toString(36).substring(2, 8)}`;
+
+    router.push(
+      `/play/online/${currentUser?.username}/${roomName}${Math.random()
+        .toString(36)
+        .substring(2, 8)}`
+    );
   };
 
   const handleJoinRoom = (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would handle joining a room
-    console.log("Joining room:", { roomCode, playerName });
-    // Redirect to the game room
-    window.location.href = `/play/online/room/${roomCode}`;
+    console.log("Joining room:", { roomCode });
+    router.push(
+      `/play/online/${currentUser?.username}/${roomName}${Math.random()
+        .toString(36)
+        .substring(2, 8)}`
+    );
   };
 
   return (
@@ -113,21 +124,6 @@ export default function Play() {
                           required
                         />
                       </div>
-                      <div className="space-y-2">
-                        <label
-                          htmlFor="player-name"
-                          className="text-white pixel-text text-xs"
-                        >
-                          YOUR NAME
-                        </label>
-                        <Input
-                          id="player-name"
-                          value={playerName}
-                          onChange={(e) => setPlayerName(e.target.value)}
-                          className="bg-gray-900 border-gray-700 focus-visible:ring-cyan-500"
-                          required
-                        />
-                      </div>
                       <Button
                         type="submit"
                         className="w-full bg-cyan-500 hover:bg-cyan-400 text-black font-bold pixel-text py-5"
@@ -164,21 +160,6 @@ export default function Play() {
                           id="room-code"
                           value={roomCode}
                           onChange={(e) => setRoomCode(e.target.value)}
-                          className="bg-gray-900 border-gray-700 focus-visible:ring-cyan-500"
-                          required
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <label
-                          htmlFor="player-name-join"
-                          className="text-white pixel-text text-xs"
-                        >
-                          YOUR NAME
-                        </label>
-                        <Input
-                          id="player-name-join"
-                          value={playerName}
-                          onChange={(e) => setPlayerName(e.target.value)}
                           className="bg-gray-900 border-gray-700 focus-visible:ring-cyan-500"
                           required
                         />
