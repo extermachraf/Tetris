@@ -32,6 +32,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${pressStart2P.variable} ${roboto.variable}`}>
         <div className="min-h-screen bg-tetris-bg text-foreground relative overflow-hidden">
+          <div className="fixed inset-0 -z-50 grid-bg"></div>
           <NavBar />
           {children}
         </div>

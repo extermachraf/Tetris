@@ -11,7 +11,6 @@ export const DisplayNavBarContent = (props: {
 }) => {
   const isMobile = props.isMobile;
   const pathName = usePathname();
-  console.log("this is the pathnemae: ", pathName);
   const navBarContent = [
     {
       name: "Home",

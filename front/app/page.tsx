@@ -1,5 +1,6 @@
 import Link from "next/link";
 import TetrisGamePreview from "@/components/tetris-game-preview";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   return (
