@@ -12,6 +12,8 @@ import api from "@/lib/api";
 import { SignUpRequest, user } from "@/types/auth";
 import { IoAlert } from "react-icons/io5";
 import { useRouter } from "next/navigation";
+import { setLazyProp } from "next/dist/server/api-utils";
+import useUserStore from "@/store/useUserStore";
 
 export default function SignUp() {
   const router = useRouter();
@@ -26,6 +28,7 @@ export default function SignUp() {
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const { setcurrentUser } = useUserStore();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -48,8 +51,12 @@ export default function SignUp() {
         email: formData.email,
         password: formData.password,
       };
+      setLoading(true);
       const response = await api.post("auth/signup", signUpData);
-      console.log(response.data);
+      if (response.data.success) {
+        const userData: user = response.data.data;
+        setcurrentUser(userData);
+      }
       router.push("/play");
     } catch (err: any) {
       console.log(err.response);
@@ -283,7 +290,8 @@ export default function SignUp() {
                   !passwordLength ||
                   !passwordHasNumber ||
                   !passwordHasSpecial ||
-                  !passwordsMatch
+                  !passwordsMatch ||
+                  loading
                 }
               >
                 CREATE ACCOUNT

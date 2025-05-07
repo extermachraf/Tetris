@@ -8,22 +8,50 @@ import { ArrowLeft, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { SignInRequest, user } from "@/types/auth";
+import api from "@/lib/api";
+import { useRouter } from "next/navigation";
+import { IoAlert } from "react-icons/io5";
+import useUserStore from "@/store/useUserStore";
 
 export default function SignIn() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    username: "",
+    email: "",
     password: "",
   });
-
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { setcurrentUser } = useUserStore();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // Here you would handle authentication
+    try {
+      const signInData: SignInRequest = {
+        email: formData.email,
+        password: formData.password,
+      };
+
+      setLoading(true);
+      const response = await api.post("auth/signin", signInData);
+      if (response.data.success) {
+        const userData: user = response.data.data;
+        setcurrentUser(userData);
+      }
+      router.push("/play");
+    } catch (err: any) {
+      setError(
+        err.response?.data?.message || "An error occurred during signup."
+      );
+    } finally {
+      setLoading(false);
+    }
     console.log("Sign in with:", formData);
   };
 
@@ -52,20 +80,25 @@ export default function SignIn() {
                 SIGN IN
               </h1>
             </div>
-
+            {error.length !== 0 && (
+              <div className="text-red-500 flex items-center justify-center p-4">
+                <IoAlert />
+                <p>{error}</p>
+              </div>
+            )}
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
                 <Label
-                  htmlFor="username"
+                  htmlFor="email"
                   className="text-white pixel-text text-xs"
                 >
-                  USERNAME
+                  EMAIL
                 </Label>
                 <Input
-                  id="username"
-                  name="username"
-                  type="text"
-                  value={formData.username}
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={formData.email}
                   onChange={handleChange}
                   required
                   className="bg-gray-900 border-gray-700 focus-visible:ring-cyan-500"
@@ -128,6 +161,7 @@ export default function SignIn() {
               <Button
                 type="submit"
                 className="w-full bg-cyan-500 hover:bg-cyan-400 text-black font-bold pixel-text py-5"
+                disabled={loading}
               >
                 SIGN IN
               </Button>

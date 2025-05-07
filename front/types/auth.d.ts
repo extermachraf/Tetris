@@ -10,4 +10,11 @@ export interface user {
   id: UUID;
   username: string;
   email: string;
+  updatedat: string;
+  createdat: string;
+}
+
+export interface SignInRequest {
+  email: string;
+  password: string;
 }

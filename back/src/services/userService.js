@@ -40,7 +40,7 @@ class UserService {
       }
 
       // Remove password from response
-      const { password_hash: _, ...userWithoutPassword } = user.toJSON();
+      const { password_hash, ...userWithoutPassword } = user.toJSON();
       return userWithoutPassword;
     } catch (error) {
       throw new Error("Authentication failed: " + error.message);
