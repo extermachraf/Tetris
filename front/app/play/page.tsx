@@ -23,16 +23,18 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import Footer from "@/components/Footer";
-import useUserStore from "@/store/useUserStore";
 import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 export default function Play() {
   const router = useRouter();
-  const { currentUser } = useUserStore();
   const [createRoomDialog, setCreateRoomDialog] = useState(false);
   const [joinRoomDialog, setJoinRoomDialog] = useState(false);
   const [roomCode, setRoomCode] = useState("");
   const [roomName, setRoomName] = useState("");
+
+  const currentUser = useSelector((state: RootState) => state.user.currentUser);
 
   const handleCreateRoom = (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,7 +67,7 @@ export default function Play() {
       <main className="relative z-10 flex-1">
         <div className="container mx-auto px-4 py-12">
           <h1 className="text-4xl md:text-5xl font-bold mb-12 text-cyan-400 glow-text pixel-text text-center">
-            PLAY TETRIS
+            PLAY TETRIS {currentUser?.email}
           </h1>
 
           <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">

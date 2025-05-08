@@ -12,7 +12,8 @@ import { SignInRequest, user } from "@/types/auth";
 import api from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { IoAlert } from "react-icons/io5";
-import useUserStore from "@/store/useUserStore";
+import { useDispatch } from "react-redux";
+import { setCurrentUser } from "@/store/userSlice";
 
 export default function SignIn() {
   const router = useRouter();
@@ -23,7 +24,7 @@ export default function SignIn() {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const { setcurrentUser } = useUserStore();
+  const dispatch = useDispatch();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -42,7 +43,7 @@ export default function SignIn() {
       const response = await api.post("auth/signin", signInData);
       if (response.data.success) {
         const userData: user = response.data.data;
-        setcurrentUser(userData);
+        dispatch(setCurrentUser(userData));
       }
       router.push("/play");
     } catch (err: any) {
