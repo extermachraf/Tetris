@@ -3,7 +3,7 @@ const cors = require("cors");
 const http = require("http");
 const authRoutes = require("./src/routes/authRoutes");
 const { Server } = require("socket.io");
-const { Socket } = require("dgram");
+const { Game } = require("./src/classes/Game");
 
 const app = express();
 
@@ -25,6 +25,10 @@ const io = new Server(server, {
     credentials: true,
   },
 });
+
+const offlineGame = new Game("offline");
+offlineGame.addPlayer("offlinePlayer");
+offlineGame.start();
 
 io.on("connection", (socket) => {
   console.log("User connected ", socket.id);

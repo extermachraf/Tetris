@@ -4,6 +4,7 @@ import { Press_Start_2P, Roboto } from "next/font/google";
 import NavBar from "@/components/NavBar";
 import "./globals.css";
 import ReduxWrapper from "@/components/ReduxWrapper";
+import { usePathname } from "next/navigation";
 
 const pressStart2P = Press_Start_2P({
   weight: "400",

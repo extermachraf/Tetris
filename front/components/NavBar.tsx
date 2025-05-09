@@ -57,6 +57,10 @@ export const DisplayNavBarContent = (props: {
 };
 
 const NavBar = () => {
+  const pathname = usePathname();
+  if (pathname.includes("/play")) {
+    return null;
+  }
   return (
     <header className="relative z-50 bg-black">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
