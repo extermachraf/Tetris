@@ -8,6 +8,7 @@ class Game {
     this.players = [];
     this.isStarted = false;
     this.intervalId = null;
+    this.isOnline = false;
   }
 
   addPlayer(name) {
@@ -17,7 +18,10 @@ class Game {
   }
 
   start() {
-    this.isStarted = true;
+    if (this.isOnline) {
+    } else {
+      this.addPlayer();
+    }
   }
 
   update() {}

@@ -4,6 +4,7 @@ const http = require("http");
 const authRoutes = require("./src/routes/authRoutes");
 const { Server } = require("socket.io");
 const { Game } = require("./src/classes/Game");
+const { testHelper } = require("./src/utils/pieceUtils");
 
 const app = express();
 
@@ -32,6 +33,11 @@ offlineGame.start();
 
 io.on("connection", (socket) => {
   console.log("User connected ", socket.id);
+  socket.emit("connected", "You are now connected!");
+  socket.on("generate array", () => {
+    console.log("generate array request is catched");
+    socket.emit("generate array", testHelper(20, 10));
+  });
   socket.on("disconnect", () => {
     console.log("user disconnected", socket.id);
   });

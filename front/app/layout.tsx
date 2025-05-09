@@ -4,7 +4,7 @@ import { Press_Start_2P, Roboto } from "next/font/google";
 import NavBar from "@/components/NavBar";
 import "./globals.css";
 import ReduxWrapper from "@/components/ReduxWrapper";
-import { usePathname } from "next/navigation";
+import { SocketProvider } from "@/context/SocketContext";
 
 const pressStart2P = Press_Start_2P({
   weight: "400",
@@ -35,10 +35,12 @@ export default function RootLayout({
       <body className={`${pressStart2P.variable} ${roboto.variable}`}>
         <div className="min-h-screen bg-tetris-bg text-foreground relative overflow-hidden">
           <div className="fixed inset-0 -z-50 grid-bg"></div>
-          <ReduxWrapper>
-            <NavBar />
-            {children}
-          </ReduxWrapper>
+          <SocketProvider>
+            <ReduxWrapper>
+              <NavBar />
+              {children}
+            </ReduxWrapper>
+          </SocketProvider>
         </div>
       </body>
     </html>

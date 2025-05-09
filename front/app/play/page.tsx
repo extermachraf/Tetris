@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   Users,
@@ -26,8 +26,10 @@ import Footer from "@/components/Footer";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import { useSocket } from "@/context/SocketContext";
 
 export default function Play() {
+  const socket = useSocket();
   const router = useRouter();
   const [createRoomDialog, setCreateRoomDialog] = useState(false);
   const [joinRoomDialog, setJoinRoomDialog] = useState(false);

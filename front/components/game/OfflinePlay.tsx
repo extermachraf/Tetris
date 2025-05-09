@@ -1,18 +1,54 @@
 "use client";
+
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useSocket } from "@/context/SocketContext";
+
+interface gameData {
+  render: number[][];
+  currentPieace: string;
+  nextPieace: string;
+  isDead: false;
+}
 
 export default function OfflinePlay() {
+  const socket = useSocket();
+  const [arrayData, setArrayData] = useState<number[][] | null>(null);
+
+  useEffect(() => {
+    // Ask the server to generate an array
+    socket.emit("generate array");
+
+    // Listen for the response
+    socket.on("generate array", (grid: number[][]) => {
+      console.log(grid);
+      setArrayData(grid);
+    });
+
+    // socket.emit("offline", (data: ))
+
+    // Cleanup listener on unmount
+    return () => {
+      socket.off("generate array");
+    };
+  }, [socket]);
+
+  // Flatten into a single 200-element array for rendering
+  const flatGrid = arrayData ? arrayData.flat() : Array(200).fill(0);
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* Game Container */}
       <main className="flex flex-1 justify-center items-center gap-10 ">
         {/* Game Grid */}
         <div className="grid grid-cols-10 grid-rows-20 w-[340px] h-[600px]">
-          {[...Array(200)].map((_, i) => (
+          {flatGrid.map((cell, i) => (
             <div
               key={i}
-              className=" border border-gray-200 w-full h-full"
-            ></div>
+              className={`border w-full h-full ${
+                cell ? "bg-cyan-500" : "bg-transparent"
+              }`}
+            />
           ))}
         </div>
 
@@ -42,7 +78,7 @@ export default function OfflinePlay() {
           <Button variant="outline" className="text-white border-gray-700">
             Restart
           </Button>
-          <Button className="">Leave</Button>
+          <Button>Leave</Button>
         </aside>
       </main>
     </div>
