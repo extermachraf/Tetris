@@ -102,7 +102,7 @@ export default function OfflinePlay() {
   // Restart game function
   const handleRestart = () => {
     setIsGameOver(false);
-    socket?.emit("startGame");
+    socket?.emit("restartGame");
   };
 
   // Render combined board (fixed blocks + current piece)

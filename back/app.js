@@ -86,6 +86,25 @@ io.on("connection", (socket) => {
         game.hardDrop(socket.id);
       }
     });
+
+    socket.on("restartGame", () => {
+      console.log("Restarting game for:", socket.id);
+
+      // Get existing game and stop it if it exists
+      const existingGame = activeGames.get(socket.id);
+      if (existingGame) {
+        existingGame.stop();
+        activeGames.delete(socket.id);
+      }
+
+      // Create a new game instance
+      const game = new Game("offline");
+      game.addPlayer(socket.id);
+      game.start();
+
+      // Store in active games map
+      activeGames.set(socket.id, game);
+    });
   });
   socket.on("disconnect", () => {
     console.log("user disconnected", socket.id);

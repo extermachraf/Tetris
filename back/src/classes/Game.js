@@ -9,7 +9,8 @@ class Game {
     this.isStarted = false;
     this.intervalId = null;
     this.isOnline = false;
-    this.tickSpeed = 500; // 1s per tick
+    this.tickSpeed = 700; // 1s per tick
+    this.isPaused = false;
   }
 
   addPlayer(name) {
@@ -32,7 +33,7 @@ class Game {
     console.log("Game update tick");
     // Process each player's game state
     this.players.forEach((player) => {
-      if (!player.isAlive) return;
+      if (!player.isAlive || !player.currentPiece) return;
 
       console.log("Processing player:", player.name);
       // Try to move the current piece down
@@ -100,38 +101,22 @@ class Game {
   }
 
   canMovePieceDown(player, checkInitialPosition = false) {
-    const piece = player.currentPiece;
-    const { shape } = piece;
-    const { x, y } = piece.position;
-
-    // For initial position check, we don't add 1 to y
-    const newY = checkInitialPosition ? y : y + 1;
-
-    // Check each cell of the piece
-    for (let row = 0; row < shape.length; row++) {
-      for (let col = 0; col < shape[row].length; col++) {
-        if (shape[row][col] !== 0) {
-          const boardX = x + col;
-          const boardY = newY + row;
-
-          // Check if piece would go out of bounds
-          if (boardY >= 20) {
-            return false;
-          }
-
-          // Check if there's a block in the way
-          if (boardY >= 0 && player.board[boardY][boardX] !== 0) {
-            return false;
-          }
-        }
-      }
+    // Add null check for player.currentPiece
+    if (!player || !player.currentPiece) {
+      return false;
     }
 
-    return true;
+    return this.canMovePiece(player, 0, checkInitialPosition ? 0 : 1);
   }
 
   // Lock the piece into the board
   lockPiece(player) {
+    // Add null check for player.currentPiece
+    if (!player || !player.currentPiece) {
+      console.warn("Cannot lock piece: player or piece is null");
+      return;
+    }
+
     const piece = player.currentPiece;
     const { shape } = piece;
     const { x, y } = piece.position;
@@ -152,6 +137,11 @@ class Game {
   }
 
   emitGameState(player) {
+    if (!player) {
+      console.warn("Cannot emit game state: player is null");
+      return;
+    }
+
     if (global.io) {
       console.log("Sending game state via Socket.IO");
       global.io.to(player.name).emit("gameState", {
@@ -171,11 +161,18 @@ class Game {
       this.intervalId = null;
     }
     this.isStarted = false;
+    this.isPaused = false;
+
+    this.players.forEach((player) => {
+      if (player && typeof player.reset === "function") {
+        player.reset();
+      }
+    });
   }
 
   moveLeft(playerId) {
     const player = this.players.find((p) => p.name === playerId);
-    if (!player || !player.isAlive) return;
+    if (!player || !player.isAlive || !player.currentPiece) return;
 
     // Check if we can move left
     if (this.canMovePiece(player, -1, 0)) {
@@ -186,7 +183,7 @@ class Game {
 
   moveRight(playerId) {
     const player = this.players.find((p) => p.name === playerId);
-    if (!player || !player.isAlive) return;
+    if (!player || !player.isAlive || !player.currentPiece) return;
 
     // Check if we can move right
     if (this.canMovePiece(player, 1, 0)) {
@@ -197,7 +194,7 @@ class Game {
 
   moveDown(playerId) {
     const player = this.players.find((p) => p.name === playerId);
-    if (!player || !player.isAlive) return;
+    if (!player || !player.isAlive || !player.currentPiece) return;
 
     // Check if we can move down
     if (this.canMovePieceDown(player)) {
@@ -208,7 +205,7 @@ class Game {
 
   rotate(playerId) {
     const player = this.players.find((p) => p.name === playerId);
-    if (!player || !player.isAlive) return;
+    if (!player || !player.isAlive || !player.currentPiece) return;
 
     // Store the original shape for rollback if needed
     const originalShape = JSON.parse(JSON.stringify(player.currentPiece.shape));
@@ -252,7 +249,12 @@ class Game {
 
   hardDrop(playerId) {
     const player = this.players.find((p) => p.name === playerId);
-    if (!player || !player.isAlive) return;
+    if (!player || !player.isAlive || !player.currentPiece) {
+      console.warn(
+        `Cannot hard drop: Player ${playerId} is not valid or has no piece`
+      );
+      return;
+    }
 
     // Move down until we hit something
     while (this.canMovePieceDown(player)) {
@@ -280,6 +282,12 @@ class Game {
 
   // Add a general method to check if a piece can move in any direction
   canMovePiece(player, deltaX, deltaY) {
+    // Add null check for player and player.currentPiece
+    if (!player || !player.currentPiece) {
+      console.warn(`Cannot check movement: Player or piece is null`);
+      return false;
+    }
+
     const piece = player.currentPiece;
     const { shape } = piece;
     const { x, y } = piece.position;
@@ -309,13 +317,45 @@ class Game {
 
   // Add a method to check if a position is valid
   isValidPosition(player) {
+    if (!player || !player.currentPiece) {
+      return false;
+    }
     return this.canMovePiece(player, 0, 0);
   }
 
-  // Update your existing canMovePieceDown method to use the general method
-  canMovePieceDown(player, checkInitialPosition = false) {
-    const deltaY = checkInitialPosition ? 0 : 1;
-    return this.canMovePiece(player, 0, deltaY);
+  // Add pause/resume functionality
+  pause(playerId) {
+    console.log(`Pausing game for player: ${playerId}`);
+
+    if (this.isStarted && !this.isPaused) {
+      this.isPaused = true;
+
+      if (this.intervalId) {
+        clearInterval(this.intervalId);
+        this.intervalId = null;
+      }
+
+      const player = this.players.find((p) => p.name === playerId);
+      if (player) {
+        global.io.to(player.name).emit("gamePaused");
+      }
+    }
+  }
+
+  resume(playerId) {
+    console.log(`Resuming game for player: ${playerId}`);
+
+    if (this.isStarted && this.isPaused) {
+      this.isPaused = false;
+
+      this.intervalId = setInterval(() => this.update(), this.tickSpeed);
+
+      const player = this.players.find((p) => p.name === playerId);
+      if (player) {
+        global.io.to(player.name).emit("gameResumed");
+        this.emitGameState(player);
+      }
+    }
   }
 }
 
