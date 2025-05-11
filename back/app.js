@@ -27,16 +27,13 @@ const io = new Server(server, {
   },
 });
 
-const offlineGame = new Game("offline");
-offlineGame.addPlayer("offlinePlayer");
-offlineGame.start();
+global.io = io;
 
 io.on("connection", (socket) => {
-  console.log("User connected ", socket.id);
-  socket.emit("connected", "You are now connected!");
   socket.on("generate array", () => {
-    console.log("generate array request is catched");
-    socket.emit("generate array", testHelper(20, 10));
+    console.log("generate array recived from:", socket.id);
+    const testBoard = testHelper(20, 10);
+    socket.emit("generate array", testBoard);
   });
   socket.on("disconnect", () => {
     console.log("user disconnected", socket.id);
