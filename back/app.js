@@ -29,14 +29,71 @@ const io = new Server(server, {
 
 global.io = io;
 
+const activeGames = new Map();
+
 io.on("connection", (socket) => {
-  socket.on("generate array", () => {
-    console.log("generate array recived from:", socket.id);
-    const testBoard = testHelper(20, 10);
-    socket.emit("generate array", testBoard);
+  // socket.on("generate array", () => {
+  //   console.log("generate array recived from:", socket.id);
+  //   const testBoard = testHelper(20, 10);
+  //   socket.emit("generate array", testBoard);
+  // });
+  socket.on("startGame", () => {
+    console.log("starting new game");
+    const game = new Game("offline");
+    game.addPlayer(socket.id);
+    game.start();
+
+    //store the game in active games map
+    activeGames.set(socket.id, game);
+
+    // Handle player movement
+    socket.on("moveLeft", () => {
+      console.log("Move left received from:", socket.id);
+      const game = activeGames.get(socket.id);
+      if (game) {
+        game.moveLeft(socket.id);
+      }
+    });
+
+    socket.on("moveRight", () => {
+      console.log("Move right received from:", socket.id);
+      const game = activeGames.get(socket.id);
+      if (game) {
+        game.moveRight(socket.id);
+      }
+    });
+
+    socket.on("moveDown", () => {
+      console.log("Move down received from:", socket.id);
+      const game = activeGames.get(socket.id);
+      if (game) {
+        game.moveDown(socket.id);
+      }
+    });
+
+    socket.on("rotate", () => {
+      console.log("Rotate received from:", socket.id);
+      const game = activeGames.get(socket.id);
+      if (game) {
+        game.rotate(socket.id);
+      }
+    });
+
+    socket.on("hardDrop", () => {
+      console.log("Hard drop received from:", socket.id);
+      const game = activeGames.get(socket.id);
+      if (game) {
+        game.hardDrop(socket.id);
+      }
+    });
   });
   socket.on("disconnect", () => {
     console.log("user disconnected", socket.id);
+    const game = activeGames.get(socket.id);
+    if (game) {
+      //game.stop //stoping game
+      activeGames.delete(socket.id); //deleat game from active games map
+    }
   });
 });
 

@@ -9,24 +9,314 @@ class Game {
     this.isStarted = false;
     this.intervalId = null;
     this.isOnline = false;
+    this.tickSpeed = 500; // 1s per tick
   }
 
   addPlayer(name) {
+    console.log(`adding player : ${name} to game`);
     const player = new Player(name);
     player.currentPiece = new Piece(getRandomPieceShape());
     this.players.push(player);
+    return player;
   }
 
   start() {
-    if (this.isOnline) {
-    } else {
-      this.addPlayer();
+    console.log("starting game...");
+    if (!this.isStarted && this.players.length > 0) {
+      this.isStarted = true;
+      this.intervalId = setInterval(() => this.update(), this.tickSpeed);
     }
   }
 
-  update() {}
+  update() {
+    console.log("Game update tick");
+    // Process each player's game state
+    this.players.forEach((player) => {
+      if (!player.isAlive) return;
 
-  stop() {}
+      console.log("Processing player:", player.name);
+      // Try to move the current piece down
+      if (this.canMovePieceDown(player)) {
+        console.log("Moving piece down");
+        // Move the piece down
+        player.currentPiece.position.y++;
+      } else {
+        console.log("Locking piece in place");
+        // If the piece can't move down, lock it in place
+        this.lockPiece(player);
+
+        // Check for completed lines
+        this.checkLines(player);
+
+        // Generate a new piece
+        player.currentPiece = new Piece(getRandomPieceShape());
+
+        // Check if game is over (new piece can't be placed)
+        if (!this.canMovePieceDown(player, true)) {
+          console.log("Game over condition detected");
+          player.isAlive = false;
+          global.io.to(player.name).emit("gameOver");
+          this.stop();
+        }
+      }
+
+      // Emit the updated game state
+      console.log("Emitting game state update to player:", player.name);
+      this.emitGameState(player);
+    });
+  }
+
+  // Check for completed lines and clear them
+  checkLines(player) {
+    let linesCleared = 0;
+
+    // Check each row from bottom to top
+    for (let row = 19; row >= 0; row--) {
+      // Check if this row is completely filled (all cells non-zero)
+      if (player.board[row].every((cell) => cell !== 0)) {
+        console.log(`Line cleared at row ${row}`);
+        linesCleared++;
+
+        // Remove the completed line
+        player.board.splice(row, 1);
+
+        // Add a new empty line at the top
+        player.board.unshift(Array(10).fill(0));
+
+        // Since we removed a row, we need to check the same row again
+        // (what was row+1 is now at position row)
+        row++;
+      }
+    }
+
+    if (linesCleared > 0) {
+      console.log(`Player cleared ${linesCleared} lines`);
+
+      // Track lines cleared (add this to Player class if desired)
+      player.linesCleared = (player.linesCleared || 0) + linesCleared;
+    }
+
+    return linesCleared;
+  }
+
+  canMovePieceDown(player, checkInitialPosition = false) {
+    const piece = player.currentPiece;
+    const { shape } = piece;
+    const { x, y } = piece.position;
+
+    // For initial position check, we don't add 1 to y
+    const newY = checkInitialPosition ? y : y + 1;
+
+    // Check each cell of the piece
+    for (let row = 0; row < shape.length; row++) {
+      for (let col = 0; col < shape[row].length; col++) {
+        if (shape[row][col] !== 0) {
+          const boardX = x + col;
+          const boardY = newY + row;
+
+          // Check if piece would go out of bounds
+          if (boardY >= 20) {
+            return false;
+          }
+
+          // Check if there's a block in the way
+          if (boardY >= 0 && player.board[boardY][boardX] !== 0) {
+            return false;
+          }
+        }
+      }
+    }
+
+    return true;
+  }
+
+  // Lock the piece into the board
+  lockPiece(player) {
+    const piece = player.currentPiece;
+    const { shape } = piece;
+    const { x, y } = piece.position;
+
+    for (let row = 0; row < shape.length; row++) {
+      for (let col = 0; col < shape[row].length; col++) {
+        if (shape[row][col] !== 0) {
+          const boardY = y + row;
+          const boardX = x + col;
+
+          // Only place on the board if it's within bounds
+          if (boardY >= 0 && boardY < 20) {
+            player.board[boardY][boardX] = shape[row][col];
+          }
+        }
+      }
+    }
+  }
+
+  emitGameState(player) {
+    if (global.io) {
+      console.log("Sending game state via Socket.IO");
+      global.io.to(player.name).emit("gameState", {
+        board: player.board,
+        currentPiece: player.currentPiece,
+        linesCleared: player.linesCleared || 0,
+      });
+    } else {
+      console.error("io is not defined!");
+    }
+  }
+
+  stop() {
+    console.log("Stopping game...");
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
+    }
+    this.isStarted = false;
+  }
+
+  moveLeft(playerId) {
+    const player = this.players.find((p) => p.name === playerId);
+    if (!player || !player.isAlive) return;
+
+    // Check if we can move left
+    if (this.canMovePiece(player, -1, 0)) {
+      player.currentPiece.position.x--;
+      this.emitGameState(player);
+    }
+  }
+
+  moveRight(playerId) {
+    const player = this.players.find((p) => p.name === playerId);
+    if (!player || !player.isAlive) return;
+
+    // Check if we can move right
+    if (this.canMovePiece(player, 1, 0)) {
+      player.currentPiece.position.x++;
+      this.emitGameState(player);
+    }
+  }
+
+  moveDown(playerId) {
+    const player = this.players.find((p) => p.name === playerId);
+    if (!player || !player.isAlive) return;
+
+    // Check if we can move down
+    if (this.canMovePieceDown(player)) {
+      player.currentPiece.position.y++;
+      this.emitGameState(player);
+    }
+  }
+
+  rotate(playerId) {
+    const player = this.players.find((p) => p.name === playerId);
+    if (!player || !player.isAlive) return;
+
+    // Store the original shape for rollback if needed
+    const originalShape = JSON.parse(JSON.stringify(player.currentPiece.shape));
+    const originalPosition = { ...player.currentPiece.position };
+
+    // Perform rotation
+    player.currentPiece.rotate();
+
+    // Check if the rotation is valid
+    if (!this.isValidPosition(player)) {
+      // Try wall kicks (check nearby positions)
+      const kicks = [
+        { x: -1, y: 0 }, // Try left
+        { x: 1, y: 0 }, // Try right
+        { x: 0, y: -1 }, // Try up
+        { x: -2, y: 0 }, // Try 2 cells left
+        { x: 2, y: 0 }, // Try 2 cells right
+      ];
+
+      let validKickFound = false;
+
+      for (const kick of kicks) {
+        player.currentPiece.position.x = originalPosition.x + kick.x;
+        player.currentPiece.position.y = originalPosition.y + kick.y;
+
+        if (this.isValidPosition(player)) {
+          validKickFound = true;
+          break;
+        }
+      }
+
+      // If no valid position found, revert the rotation
+      if (!validKickFound) {
+        player.currentPiece.shape = originalShape;
+        player.currentPiece.position = originalPosition;
+      }
+    }
+
+    this.emitGameState(player);
+  }
+
+  hardDrop(playerId) {
+    const player = this.players.find((p) => p.name === playerId);
+    if (!player || !player.isAlive) return;
+
+    // Move down until we hit something
+    while (this.canMovePieceDown(player)) {
+      player.currentPiece.position.y++;
+    }
+
+    // Lock the piece
+    this.lockPiece(player);
+
+    // Check for completed lines
+    this.checkLines(player);
+
+    // Generate a new piece
+    player.currentPiece = new Piece(getRandomPieceShape());
+
+    // Check if game is over
+    if (!this.canMovePieceDown(player, true)) {
+      player.isAlive = false;
+      global.io.to(player.name).emit("gameOver");
+      this.stop();
+    }
+
+    this.emitGameState(player);
+  }
+
+  // Add a general method to check if a piece can move in any direction
+  canMovePiece(player, deltaX, deltaY) {
+    const piece = player.currentPiece;
+    const { shape } = piece;
+    const { x, y } = piece.position;
+
+    // Check each cell of the piece
+    for (let row = 0; row < shape.length; row++) {
+      for (let col = 0; col < shape[row].length; col++) {
+        if (shape[row][col] !== 0) {
+          const newX = x + col + deltaX;
+          const newY = y + row + deltaY;
+
+          // Check boundaries
+          if (newX < 0 || newX >= 10 || newY >= 20) {
+            return false;
+          }
+
+          // Check collision with existing blocks
+          if (newY >= 0 && player.board[newY][newX] !== 0) {
+            return false;
+          }
+        }
+      }
+    }
+
+    return true;
+  }
+
+  // Add a method to check if a position is valid
+  isValidPosition(player) {
+    return this.canMovePiece(player, 0, 0);
+  }
+
+  // Update your existing canMovePieceDown method to use the general method
+  canMovePieceDown(player, checkInitialPosition = false) {
+    const deltaY = checkInitialPosition ? 0 : 1;
+    return this.canMovePiece(player, 0, deltaY);
+  }
 }
 
 module.exports = { Game };
