@@ -1,2 +1,66 @@
+# Database
 schema.sql
-/back/.env
+
+# Environment variables
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+# Dependencies
+**/node_modules
+**/.pnp
+**/.pnp.js
+
+# Testing
+**/coverage
+**/.nyc_output
+
+# Build outputs
+**/build
+**/dist
+**/.next/
+**/out/
+**/storybook-static
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+**/logs
+**/*.log
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+**/.DS_Store
+*.sublime-project
+*.sublime-workspace
+
+# TypeScript
+**/*.tsbuildinfo
+**/next-env.d.ts
+
+# Cache
+**/.eslintcache
+**/.stylelintcache
+.cache/
+.parcel-cache/
+
+# Misc
+.vercel
+.turbo
+.serverless/
+.fusebox/
+.dynamodb/
+.tern-port
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
