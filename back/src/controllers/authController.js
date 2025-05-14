@@ -31,6 +31,44 @@ class AuthController {
       });
     }
   }
+  async refreshToken(req, res) {
+    try {
+      console.log(req.body);
+      const { accessToken } = req.body; // Fixed typo: accesToken → accessToken
+      if (!accessToken) {
+        return res.status(400).json({
+          success: false,
+          message: "Access token is required",
+        });
+      }
+
+      const result = await userService.refreshAccessToken(accessToken);
+      res.status(200).json({
+        success: true, // Fixed typo: succes → success
+        data: result,
+      });
+    } catch (error) {
+      res.status(401).json({
+        success: false,
+        message: error.message,
+      });
+    }
+  }
+
+  async logout(req, res) {
+    try {
+      const result = await userService.logout(req.user.id);
+      res.status(200).json({
+        success: true,
+        message: "Logged out succesfully",
+      });
+    } catch (error) {
+      res.status(400).json({
+        success: false,
+        message: error.message,
+      });
+    }
+  }
 }
 
 module.exports = new AuthController();

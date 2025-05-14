@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const http = require("http");
 const authRoutes = require("./src/routes/authRoutes");
+const userRoutes = require("./src/routes/userRoutes");
 const { Server } = require("socket.io");
 const { Game } = require("./src/classes/Game");
 const { testHelper } = require("./src/utils/pieceUtils");
@@ -118,6 +119,7 @@ io.on("connection", (socket) => {
 
 // Add your authentication routes
 app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
 
 // Start server
 server.listen(PORT, () => {
