@@ -7,8 +7,12 @@ const jwt = require("jsonwebtoken");
  * @param {express.NextFunction} next
  */
 const authenticateToken = (req, res, next) => {
+  const tokenFromCookies = req.cookies.accessToken;
+
   const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1]; //Barrer tokrn format
+  const tokenFromHeaders = authHeader && authHeader.split(" ")[1]; //Barrer tokrn format
+
+  const token = tokenFromCookies || tokenFromHeaders;
 
   if (!token) {
     return res.status(401).json({
@@ -19,7 +23,6 @@ const authenticateToken = (req, res, next) => {
 
   try {
     const decode = jwt.verify(token, process.env.JWT_SECRET);
-    console.log(decode);
     req.user = decode;
     next();
   } catch (error) {

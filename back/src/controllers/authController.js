@@ -1,12 +1,23 @@
 const userService = require("../services/userService");
+const express = require("express");
+const router = express.Router();
 
 class AuthController {
+  /**
+   * @param {import('express').Request} req
+   * @param {import('express').Response} res
+   */
   async signup(req, res) {
     try {
-      const user = await userService.signup(req.body);
+      const result = await userService.signup(req.body);
+      res.cookie("accessToken", result.accessToken, {
+        httpOnly: true,
+        sameSite: "none",
+        maxAge: 60 * 60 * 1000,
+      });
       res.status(201).json({
         success: true,
-        data: user,
+        data: { user: result.user },
       });
     } catch (error) {
       res.status(400).json({
@@ -16,13 +27,22 @@ class AuthController {
     }
   }
 
+  /**
+   * @param {import('express').Request} req
+   * @param {import('express').Response} res
+   */
   async signin(req, res) {
     try {
       const { email, password } = req.body;
-      const user = await userService.signin(email, password);
+      const result = await userService.signin(email, password);
+      res.cookie("accessToken", result.accessToken, {
+        httpOnly: true,
+        sameSite: "none",
+        maxAge: 60 * 60 * 1000,
+      });
       res.status(200).json({
         success: true,
-        data: user,
+        data: { user: result.user },
       });
     } catch (error) {
       res.status(401).json({
@@ -31,10 +51,10 @@ class AuthController {
       });
     }
   }
+
   async refreshToken(req, res) {
     try {
-      console.log(req.body);
-      const { accessToken } = req.body; // Fixed typo: accesToken → accessToken
+      const { accessToken } = req.body;
       if (!accessToken) {
         return res.status(400).json({
           success: false,
@@ -43,9 +63,15 @@ class AuthController {
       }
 
       const result = await userService.refreshAccessToken(accessToken);
+
+      res.cookie("accessToken", result.accessToken, {
+        httpOnly: true,
+        sameSite: "none",
+        maxAge: 60 * 60 * 1000,
+      });
       res.status(200).json({
         success: true, // Fixed typo: succes → success
-        data: result,
+        data: { accessToken: result.accessToken },
       });
     } catch (error) {
       res.status(401).json({
@@ -55,9 +81,17 @@ class AuthController {
     }
   }
 
+  /**
+   * @param {import('express').Request} req
+   * @param {import('express').Response} res
+   */
   async logout(req, res) {
     try {
       const result = await userService.logout(req.user.id);
+      res.clearCookie("accessToken", {
+        httpOnly: true,
+        sameSite: "none",
+      });
       res.status(200).json({
         success: true,
         message: "Logged out succesfully",

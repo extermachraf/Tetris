@@ -3,6 +3,12 @@ const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const { error } = require("console");
+const {
+  generateAccessToken,
+  generateRefreshToken,
+  verifiyAccessToken,
+  verifiyRefreshToken,
+} = require("../utils/tokens");
 
 class UserService {
   async signup(userData) {
@@ -17,8 +23,8 @@ class UserService {
         password_hash: hashedPassword,
       });
 
-      const accessToken = this.generateAccessToken(user);
-      const refreshToken = this.generateRefreshToken(user);
+      const accessToken = generateAccessToken(user);
+      const refreshToken = generateRefreshToken(user);
 
       await user.update({ refresh_token: refreshToken });
       // Remove password from response
@@ -27,7 +33,6 @@ class UserService {
       return {
         user: userWithoutPassword,
         accessToken,
-        refreshToken,
       };
     } catch (error) {
       console.error("Signup error details:", error);
@@ -55,9 +60,8 @@ class UserService {
         throw new Error("Invalid password");
       }
 
-      const accessToken = this.generateAccessToken(user);
-      const refreshToken = this.generateRefreshToken(user);
-
+      const accessToken = generateAccessToken(user);
+      const refreshToken = generateRefreshToken(user);
       await user.update({ refresh_token: refreshToken });
 
       // Remove password from response
@@ -66,59 +70,42 @@ class UserService {
       return {
         user: userWithoutPassword,
         accessToken,
-        refreshToken,
       };
     } catch (error) {
       throw new Error("Authentication failed: " + error.message);
     }
   }
 
-  generateRefreshToken(user) {
-    return jwt.sign(
-      {
-        id: user.id,
-      },
-      process.env.REFRESH_SECRET,
-      { expiresIn: "7d" }
-    );
-  }
-
-  generateAccessToken(user) {
-    return jwt.sign(
-      {
-        id: user.id,
-        email: user.email,
-      },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: "1h",
-      }
-    );
-  }
   async refreshAccessToken(expiredAccessToken) {
     try {
+      // Decode the expired token (without verification)
       const decodedToken = jwt.decode(expiredAccessToken);
 
-      if (!decodedToken || !decodedToken.id)
+      if (!decodedToken || !decodedToken.id) {
         throw new Error("Invalid access token format");
+      }
 
+      // Find the user
       const user = await User.findByPk(decodedToken.id);
       if (!user) throw new Error("User not found");
 
-      //get stored refresh token
+      // Get stored refresh token from database
       const storedRefreshToken = user.refresh_token;
       if (!storedRefreshToken) throw new Error("No refresh token found");
 
+      // Verify the stored refresh token
       try {
-        jwt.verify(storedRefreshToken, process.env.REFRESH_SECRET);
+        verifiyRefreshToken(storedRefreshToken);
       } catch (error) {
-        if (error instanceof jwt.TokenExpiredError)
+        if (error instanceof jwt.TokenExpiredError) {
           throw new Error("Refresh token expired");
+        }
         throw new Error("Invalid refresh token");
       }
 
       // Generate new access token
-      const newAccessToken = this.generateAccessToken(user);
+      const newAccessToken = generateAccessToken(user);
+
       return { accessToken: newAccessToken };
     } catch (error) {
       throw new Error("Token refresh failed: " + error.message);

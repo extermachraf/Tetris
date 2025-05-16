@@ -1,4 +1,70 @@
 {
-  "email": "test@example.com",
-  "password": "Password123!"
+  "info": {
+    "_postman_id": "b2c3d4e5-f6g7-8901-hijk-lm2345678901",
+    "name": "Auth - Signin",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Signin",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"Password123!\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/signin",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "auth", "signin"]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.test(\"Status code is 200\", function () {",
+          "    pm.response.to.have.status(200);",
+          "});",
+          "",
+          "pm.test(\"Response has user data\", function () {",
+          "    var jsonData = pm.response.json();",
+          "    pm.expect(jsonData.success).to.eql(true);",
+          "    pm.expect(jsonData.data).to.have.property('user');",
+          "    pm.expect(jsonData.data.user).to.have.property('id');",
+          "    pm.expect(jsonData.data.user).to.have.property('email');",
+          "});",
+          "",
+          "pm.test(\"Cookie is set\", function () {",
+          "    pm.expect(pm.cookies.has('accessToken')).to.be.true;",
+          "});"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    }
+  ]
 }

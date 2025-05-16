@@ -5,7 +5,8 @@ const authRoutes = require("./src/routes/authRoutes");
 const userRoutes = require("./src/routes/userRoutes");
 const { Server } = require("socket.io");
 const { Game } = require("./src/classes/Game");
-const { testHelper } = require("./src/utils/pieceUtils");
+// const { testHelper } = require("./src/utils/pieceUtils");
+const cookieParser = require("cookie-parser");
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(
   })
 );
 app.use(express.json()); // For parsing application/json
+app.use(cookieParser());
 const PORT = process.env.PORT || 3001;
 const server = http.createServer(app); // Using HTTP server for Express
 // Middleware and routes
