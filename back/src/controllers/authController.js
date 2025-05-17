@@ -12,7 +12,7 @@ class AuthController {
       const result = await userService.signup(req.body);
       res.cookie("accessToken", result.accessToken, {
         httpOnly: true,
-        sameSite: "none",
+        sameSite: "lax",
         maxAge: 60 * 60 * 1000,
       });
       res.status(201).json({
@@ -37,7 +37,7 @@ class AuthController {
       const result = await userService.signin(email, password);
       res.cookie("accessToken", result.accessToken, {
         httpOnly: true,
-        sameSite: "none",
+        sameSite: "lax",
         maxAge: 60 * 60 * 1000,
       });
       res.status(200).json({
@@ -66,7 +66,7 @@ class AuthController {
 
       res.cookie("accessToken", result.accessToken, {
         httpOnly: true,
-        sameSite: "none",
+        sameSite: "lax",
         maxAge: 60 * 60 * 1000,
       });
       res.status(200).json({
@@ -90,7 +90,7 @@ class AuthController {
       const result = await userService.logout(req.user.id);
       res.clearCookie("accessToken", {
         httpOnly: true,
-        sameSite: "none",
+        sameSite: "lax",
       });
       res.status(200).json({
         success: true,
@@ -98,6 +98,29 @@ class AuthController {
       });
     } catch (error) {
       res.status(400).json({
+        success: false,
+        message: error.message,
+      });
+    }
+  }
+
+  /**
+   * @param {import('express').Request} req
+   * @param {import('express').Response} res
+   */
+  async validateToken(req, res) {
+    try {
+      // The authenticateToken middleware already verified the token
+      // If we reach this point, the token is valid
+      res.status(200).json({
+        success: true,
+        data: {
+          userId: req.user.id,
+          email: req.user.email,
+        },
+      });
+    } catch (error) {
+      res.status(401).json({
         success: false,
         message: error.message,
       });

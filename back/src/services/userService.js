@@ -35,7 +35,6 @@ class UserService {
         accessToken,
       };
     } catch (error) {
-      console.error("Signup error details:", error);
       if (error.name === "SequelizeUniqueConstraintError") {
         throw new Error("Username or email already exists");
       }
