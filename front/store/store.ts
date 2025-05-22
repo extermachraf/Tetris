@@ -9,16 +9,18 @@ import {
   PURGE,
   REGISTER,
 } from "redux-persist";
-import userReducer from "./userSlice"; // Move the slice to a separate file
+import userReducer from "./userSlice";
+import gameReducer from "./gameSlice";
 
 const rootReducer = combineReducers({
   user: userReducer,
+  game: gameReducer,
 });
 
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["user"],
+  whitelist: ["user"], // Only persist user data, not game state
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

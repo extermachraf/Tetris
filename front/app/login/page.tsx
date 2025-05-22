@@ -42,7 +42,7 @@ export default function SignIn() {
       setLoading(true);
       const response = await api.post("auth/signin", signInData);
       if (response.data.success) {
-        const userData: user = response.data.data;
+        const userData: { user: user } = response.data.data;
         dispatch(setCurrentUser(userData));
       }
       router.push("/play");

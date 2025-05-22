@@ -6,8 +6,17 @@ import Link from "next/link";
 import { ArrowLeft, MessageSquare, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import useRoomHash from "@/hooks/useRoomHash";
 
 export default function OnlineRoom() {
+  //use a custom hook to extarct room information and the player name from hash url
+  const { hash, roomId, playerName } = useRoomHash();
+
+  console.log("this is hash", hash);
+  console.log("Room id: ", roomId);
+  console.log("player: ", playerName);
   return (
     <div className="min-h-screen bg-black text-white relative overflow-hidden flex flex-col">
       {/* Grid Background */}

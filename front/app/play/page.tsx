@@ -36,32 +36,34 @@ export default function Play() {
   const [roomCode, setRoomCode] = useState("");
   const [roomName, setRoomName] = useState("");
 
-  const currentUser = useSelector((state: RootState) => state.user.currentUser);
+  const currentUser = useSelector(
+    (state: RootState) => state.user.currentUser?.user
+  );
 
+  console.log("this is the current user: ", currentUser);
+  // handle room creation
   const handleCreateRoom = (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would handle room creation
-    console.log("Creating room:", { roomName });
-    // Redirect to the game room
-    // window.location.href = `/play/online/${roomName}/${
-    //   currentUser?.username
-    // }/${Math.random().toString(36).substring(2, 8)}`;
 
-    router.push(
-      `/play/online/${currentUser?.username}/${roomName}${Math.random()
-        .toString(36)
-        .substring(2, 8)}`
-    );
+    let playerName;
+    if (currentUser) {
+      playerName = currentUser?.username;
+    } else {
+      playerName = `Guest${Math.floor(Math.random() * 1000)}`;
+    }
+    router.push(`/play/online/#${roomName}[${playerName}]`);
   };
 
   const handleJoinRoom = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Joining room:", { roomCode });
-    router.push(
-      `/play/online/${currentUser?.username}/${roomName}${Math.random()
-        .toString(36)
-        .substring(2, 8)}`
-    );
+
+    let playerName;
+    if (currentUser) {
+      playerName = currentUser?.username;
+    } else {
+      playerName = `Guest${Math.floor(Math.random() * 1000)}`;
+    }
+    router.push(`/play/online/#${roomName}[${playerName}]`);
   };
 
   return (
@@ -69,7 +71,7 @@ export default function Play() {
       <main className="relative z-10 flex-1">
         <div className="container mx-auto px-4 py-12">
           <h1 className="text-4xl md:text-5xl font-bold mb-12 text-cyan-400 glow-text pixel-text text-center">
-            PLAY TETRIS {currentUser?.email}
+            PLAY TETRIS
           </h1>
 
           <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
