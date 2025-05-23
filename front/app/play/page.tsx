@@ -51,7 +51,7 @@ export default function Play() {
     } else {
       playerName = `Guest${Math.floor(Math.random() * 1000)}`;
     }
-    router.push(`/play/online/#${roomName}[${playerName}]`);
+    router.push(`/play/online/#create-${roomName}[${playerName}]`);
   };
 
   const handleJoinRoom = (e: React.FormEvent) => {
@@ -63,7 +63,7 @@ export default function Play() {
     } else {
       playerName = `Guest${Math.floor(Math.random() * 1000)}`;
     }
-    router.push(`/play/online/#${roomName}[${playerName}]`);
+    router.push(`/play/online/join/#join-${roomName}[${playerName}]`);
   };
 
   return (

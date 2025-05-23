@@ -11,10 +11,12 @@ import {
 } from "redux-persist";
 import userReducer from "./userSlice";
 import gameReducer from "./gameSlice";
+import roomReducer from "./roomSlice";
 
 const rootReducer = combineReducers({
   user: userReducer,
   game: gameReducer,
+  room: roomReducer,
 });
 
 const persistConfig = {

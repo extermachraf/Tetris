@@ -13,6 +13,18 @@ class Game {
     this.isPaused = false;
   }
 
+  removePlayer(name) {
+    const playerIndex = this.players.findIndex(
+      (player) => player.name === name
+    );
+    if (playerIndex !== -1) {
+      this.players.splice(playerIndex, 1);
+      console.log(`Player ${name} removed from game ${this.roomName}`);
+      return true;
+    }
+    return false;
+  }
+
   addPlayer(name) {
     console.log(`adding player : ${name} to game`);
     const player = new Player(name);
